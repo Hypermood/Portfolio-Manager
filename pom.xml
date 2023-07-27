@@ -61,7 +61,7 @@
 					<driver>com.mysql.cj.jdbc.Driver</driver>
 					<url>jdbc:mysql://localhost:3306/portfolio_manager</url>
 					<user>root</user>
-					<password>mysql</password>
+					<password>root</password>
 					<baselineOnMigrate>true</baselineOnMigrate>
 					<validateMigrationNaming>true</validateMigrationNaming>
 				</configuration>
