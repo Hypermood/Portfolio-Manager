@@ -1,19 +1,12 @@
-package com.melon.portfoliomanager.models;
+package com.melon.portfoliomanager.dtos;
 
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-
-@Entity
-@Table(name="users")
-public class User {
-
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class UserDto {
 
     @NotNull(message = "Invalid user input. The username is null.")
     @Column(name = "username", unique = true)
@@ -31,23 +24,13 @@ public class User {
     private String lastName;
 
 
-    public User() {
-    }
-
-    public User(String username, String email, String firstName, String lastName) {
+    public UserDto(String username, String email, String firstName, String lastName) {
         this.username = username;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
     }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public UserDto() {
     }
 
     public String getUsername() {
