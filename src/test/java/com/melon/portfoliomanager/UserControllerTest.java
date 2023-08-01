@@ -3,6 +3,7 @@ package com.melon.portfoliomanager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.melon.portfoliomanager.controllers.UserController;
+import com.melon.portfoliomanager.dtos.UserDeleteDto;
 import com.melon.portfoliomanager.dtos.UserDto;
 import com.melon.portfoliomanager.exceptions.NullFieldException;
 import com.melon.portfoliomanager.exceptions.UsernameAlreadyUsedException;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
@@ -99,6 +101,49 @@ public class UserControllerTest {
                 .body(BodyInserters.fromValue(userDto))
                 .exchange()
                 .expectStatus().isBadRequest();
+    }
+
+
+    @Test
+    public void deleteUser_availableUser_ShouldReturnNoContent() throws Exception {
+
+        UserDeleteDto userDeleteDto = new UserDeleteDto("username");
+        when(userRepository.findUsersByUsername(userDeleteDto.getUsername())).thenReturn(List.of(new User("username", "email@example.com","v","p")));
+
+
+        webTestClient.method(HttpMethod.DELETE)
+                .uri("/users/delete")
+                .body(BodyInserters.fromValue(userDeleteDto))
+                .exchange().expectStatus().isNoContent();
+
+    }
+
+    @Test
+    public void deleteUser_nullFieldRequest_ShouldReturnNoContent() throws Exception {
+
+        UserDeleteDto userDeleteDto = new UserDeleteDto();
+//        when(userRepository.findUsersByUsername(userDeleteDto.getUsername())).thenReturn(List.of(new User("username", "email@example.com","v","p")));
+
+
+        webTestClient.method(HttpMethod.DELETE)
+                .uri("/users/delete")
+                .body(BodyInserters.fromValue(userDeleteDto))
+                .exchange().expectStatus().isBadRequest();
+
+    }
+
+    @Test
+    public void deleteUser_nonExistentUser_ShouldReturnNoContent() throws Exception {
+
+        UserDeleteDto userDeleteDto = new UserDeleteDto("username");
+        when(userRepository.findUsersByUsername(userDeleteDto.getUsername())).thenReturn(new ArrayList<>());
+
+
+        webTestClient.method(HttpMethod.DELETE)
+                .uri("/users/delete")
+                .body(BodyInserters.fromValue(userDeleteDto))
+                .exchange().expectStatus().isBadRequest();
+
     }
 
 

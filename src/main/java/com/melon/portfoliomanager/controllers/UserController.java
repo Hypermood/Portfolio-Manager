@@ -1,7 +1,9 @@
 package com.melon.portfoliomanager.controllers;
 
 
+import com.melon.portfoliomanager.dtos.UserDeleteDto;
 import com.melon.portfoliomanager.dtos.UserDto;
+import com.melon.portfoliomanager.exceptions.NoSuchUserException;
 import com.melon.portfoliomanager.exceptions.UsernameAlreadyUsedException;
 import com.melon.portfoliomanager.models.User;
 import com.melon.portfoliomanager.services.UserService;
@@ -36,6 +38,22 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
         catch (UsernameAlreadyUsedException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>("Internal Server Error.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteUser(@Valid @RequestBody UserDeleteDto userDeleteDto) throws Exception {
+
+        try {
+            userService.deleteUser(userDeleteDto);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        catch (NoSuchUserException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         catch (Exception e) {
