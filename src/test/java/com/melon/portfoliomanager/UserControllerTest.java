@@ -39,7 +39,7 @@ public class UserControllerTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    private UserService userService;
+    private UserRepository userRepository;
 
     private UserDto validUserDto;
 
@@ -54,11 +54,10 @@ public class UserControllerTest {
 
     }
 
-
     @Test
     void createUser_ValidRequest_ShouldReturnCreated() throws Exception {
 
-        when(userService.createUser(any(User.class))).thenReturn(new User("vvp","vpavlov@melon.com","Georgi","Ivanov"));
+        when(userRepository.save(any(User.class))).thenReturn(new User("vvp","vpavlov@melon.com","Georgi","Ivanov"));
 
         webTestClient.post().uri("/users/add")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -86,6 +85,21 @@ public class UserControllerTest {
                 .expectStatus().isBadRequest();
     }
 
+
+    @Test
+    public void createUser_UsernameAlreadyTaken_ShouldReturnBadRequest() throws Exception {
+
+        UserDto userDto = new UserDto("username", "email@example.com","v","p");
+        when(userRepository.findAll()).thenReturn(List.of(new User("username", "email@example.com","v","p")));
+
+
+        webTestClient.post()
+                .uri("/users/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(userDto))
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
 
 
 }

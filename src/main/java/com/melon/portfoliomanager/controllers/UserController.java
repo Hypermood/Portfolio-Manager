@@ -2,7 +2,6 @@ package com.melon.portfoliomanager.controllers;
 
 
 import com.melon.portfoliomanager.dtos.UserDto;
-import com.melon.portfoliomanager.exceptions.NullFieldException;
 import com.melon.portfoliomanager.exceptions.UsernameAlreadyUsedException;
 import com.melon.portfoliomanager.models.User;
 import com.melon.portfoliomanager.services.UserService;
@@ -20,7 +19,6 @@ public class UserController {
 
 
     private final UserService userService;
-
 
     @Autowired
     public UserController(UserService userService) {

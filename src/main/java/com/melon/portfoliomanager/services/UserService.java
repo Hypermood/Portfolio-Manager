@@ -6,6 +6,7 @@ import com.melon.portfoliomanager.exceptions.UsernameAlreadyUsedException;
 import com.melon.portfoliomanager.models.User;
 import com.melon.portfoliomanager.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 
@@ -19,7 +20,6 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
 
 
     public User createUser(User user) throws Exception {

@@ -30,6 +30,11 @@ public class UserDto {
         this.firstName = firstName;
         this.lastName = lastName;
     }
+
+    public UserDto(String username, String email) {
+        this.username = username;
+        this.email = email;
+    }
     public UserDto() {
     }
 
