@@ -2,13 +2,13 @@ package com.melon.portfoliomanager.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,12 +30,14 @@ public class User {
 
     public User() {
     }
+
     public User(String username, String email, String firstName, String lastName) {
         this.username = username;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
     }
+
     public Long getId() {
         return id;
     }

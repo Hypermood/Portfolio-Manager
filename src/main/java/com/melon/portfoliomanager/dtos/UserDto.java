@@ -3,7 +3,6 @@ package com.melon.portfoliomanager.dtos;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class UserDto {
@@ -28,11 +27,6 @@ public class UserDto {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-    }
-
-    public UserDto(String username, String email) {
-        this.username = username;
-        this.email = email;
     }
 
     public UserDto() {
