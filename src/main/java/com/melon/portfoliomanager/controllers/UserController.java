@@ -19,14 +19,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
 
-
     private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
 
     @PostMapping("/add")
     public ResponseEntity<String> createUser(@Valid @RequestBody UserDto userDto) throws Exception {
@@ -45,7 +43,6 @@ public class UserController {
         }
     }
 
-
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteUser(@Valid @RequestBody UserDeleteDto userDeleteDto) throws Exception {
 
@@ -60,7 +57,6 @@ public class UserController {
             return new ResponseEntity<>("Internal Server Error.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

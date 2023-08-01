@@ -23,7 +23,6 @@ public class UserDto {
     @Column(name = "last_name")
     private String lastName;
 
-
     public UserDto(String username, String email, String firstName, String lastName) {
         this.username = username;
         this.email = email;
@@ -35,6 +34,7 @@ public class UserDto {
         this.username = username;
         this.email = email;
     }
+
     public UserDto() {
     }
 

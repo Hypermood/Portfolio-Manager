@@ -9,8 +9,6 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name="users")
 public class User {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,18 +28,14 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
-
     public User() {
     }
-
     public User(String username, String email, String firstName, String lastName) {
         this.username = username;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
     }
-
-
     public Long getId() {
         return id;
     }

@@ -13,7 +13,6 @@ public class UserDeleteDto {
 
     public UserDeleteDto() {
     }
-
     public String getUsername() {
         return username;
     }
