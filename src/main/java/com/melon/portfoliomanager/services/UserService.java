@@ -2,6 +2,7 @@ package com.melon.portfoliomanager.services;
 
 import com.melon.portfoliomanager.dtos.UserDeleteDto;
 import com.melon.portfoliomanager.dtos.UserDto;
+import com.melon.portfoliomanager.exceptions.NoSuchUserException;
 import com.melon.portfoliomanager.exceptions.UsernameAlreadyUsedException;
 import com.melon.portfoliomanager.models.User;
 import com.melon.portfoliomanager.repositories.UserRepository;
@@ -27,7 +28,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User transformDto(UserDto userDto) throws Exception {
+    public User transformDto(UserDto userDto) {
         return new User(userDto.getUsername(), userDto.getEmail(), userDto.getFirstName(), userDto.getLastName());
     }
 
@@ -35,9 +36,13 @@ public class UserService {
         return userRepository.findByUsername(user.getUsername()).isEmpty();
     }
 
-    public void deleteUser(UserDeleteDto userDeleteDto) throws Exception {
+    public void deleteUser(UserDeleteDto userDeleteDto) {
 
-        userRepository.deleteByUsername(userDeleteDto.getUsername());
+        long res = userRepository.deleteByUsername(userDeleteDto.getUsername());
+
+        if(res == 0){
+            throw new NoSuchUserException("There is no such user in the database.");
+        }
 
     }
 

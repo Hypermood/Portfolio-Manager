@@ -88,7 +88,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void createUser_UsernameAlreadyTaken_ShouldReturnBadRequest() throws Exception {
+    public void createUser_UsernameAlreadyTaken_ShouldReturnBadRequest() {
 
         UserDto userDto = new UserDto("username", "email@example.com", "v", "p");
         when(userRepository.findByUsername("username")).thenReturn(List.of(new User("username", "email@example.com", "v", "p")));
@@ -142,7 +142,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void createUser_InternalServerError(CapturedOutput capturedOutput) throws Exception {
+    public void createUser_InternalServerError(CapturedOutput capturedOutput) {
 
         UserDto userDto = new UserDto("username", "email@example.com", "v", "p");
 
@@ -156,11 +156,11 @@ public class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
                 .expectBody(String.class).isEqualTo("Internal Server Error.");
 
-        assertTrue(capturedOutput.getAll().contains("Unexpected error"));
+        assertTrue(capturedOutput.getOut().contains("Unexpected error"));
     }
 
     @Test
-    public void deleteUser_InternalServerError(CapturedOutput capturedOutput) throws Exception {
+    public void deleteUser_InternalServerError(CapturedOutput capturedOutput) {
 
         UserDeleteDto userDeleteDto = new UserDeleteDto("username");
 
@@ -172,6 +172,6 @@ public class UserControllerTest {
                 .exchange().expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
                 .expectBody(String.class).isEqualTo("Internal Server Error.");
 
-        assertTrue(capturedOutput.getAll().contains("Unexpected error"));
+        assertTrue(capturedOutput.getOut().contains("Unexpected error"));
     }
 }
