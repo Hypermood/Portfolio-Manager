@@ -25,7 +25,7 @@ public class UserController {
 
     private final UserService userService;
 
-    private final static Logger logger = LoggerFactory.getLogger(UserController.class);
+    public final static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     public UserController(UserService userService) {
@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> createUser(@Valid @RequestBody UserDto userDto) throws Exception {
+    public ResponseEntity<String> createUser(@Valid @RequestBody UserDto userDto) {
 
         try {
             User dtoToUser = userService.transformDto(userDto);
@@ -49,7 +49,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteUser(@Valid @RequestBody UserDeleteDto userDeleteDto) throws Exception {
+    public ResponseEntity<String> deleteUser(@Valid @RequestBody UserDeleteDto userDeleteDto) {
 
         try {
             userService.deleteUser(userDeleteDto);
