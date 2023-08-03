@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  portfolio_manager:
+    build: .
+    image: portfolio_manager
+    container_name: portfolio_manager_container
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql_database:
+        condition: service_healthy
+
+  mysql_database:
+    image: mysql/mysql-server
+    container_name: mysql_container
+    ports:
+      - "1234:3306"
+    environment:
+      MYSQL_DATABASE: portfolio_manager
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: "%"
+    volumes:
+        - portfolio_manager_data:/var/lib/mysql
+    restart: unless-stopped
+volumes:
+  portfolio_manager_data:

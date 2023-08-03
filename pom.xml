@@ -69,7 +69,7 @@
                 <version>9.21.0</version>
                 <configuration>
                     <driver>com.mysql.cj.jdbc.Driver</driver>
-                    <url>jdbc:mysql://localhost:3306/portfolio_manager</url>
+                    <url>jdbc:mysql://mysql_container:3306/portfolio_manager</url>
                     <user>root</user>
                     <password>root</password>
                     <baselineOnMigrate>true</baselineOnMigrate>
