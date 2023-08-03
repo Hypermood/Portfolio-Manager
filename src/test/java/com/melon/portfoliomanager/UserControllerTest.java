@@ -5,14 +5,12 @@ import com.melon.portfoliomanager.dtos.UserDto;
 import com.melon.portfoliomanager.exceptions.NoSuchUserException;
 import com.melon.portfoliomanager.models.User;
 import com.melon.portfoliomanager.repositories.UserRepository;
-import com.melon.portfoliomanager.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.http.HttpMethod;
@@ -38,9 +36,6 @@ public class UserControllerTest {
 
     @MockBean
     private UserRepository userRepository;
-
-    @SpyBean
-    private UserService userService;
 
     private UserDto validUserDto;
 
@@ -107,7 +102,7 @@ public class UserControllerTest {
     public void deleteUser_availableUser_ShouldReturnNoContent() {
 
         UserDeleteDto userDeleteDto = new UserDeleteDto("username");
-        when(userRepository.findByUsername(userDeleteDto.getUsername())).thenReturn(List.of(new User("username", "email@example.com", "v", "p")));
+        when(userRepository.deleteByUsername(userDeleteDto.getUsername())).thenReturn(1L);
 
         webTestClient.method(HttpMethod.DELETE)
                 .uri("/users/delete")
@@ -145,8 +140,7 @@ public class UserControllerTest {
     public void createUser_InternalServerError(CapturedOutput capturedOutput) {
 
         UserDto userDto = new UserDto("username", "email@example.com", "v", "p");
-
-        doThrow(new RuntimeException("Unexpected error")).when(userService).transformDto(any(UserDto.class));
+        doThrow(new RuntimeException("Unexpected error")).when(userRepository).findByUsername(userDto.getUsername());
 
         webTestClient.post()
                 .uri("/users/add")
@@ -163,8 +157,7 @@ public class UserControllerTest {
     public void deleteUser_InternalServerError(CapturedOutput capturedOutput) {
 
         UserDeleteDto userDeleteDto = new UserDeleteDto("username");
-
-        doThrow(new RuntimeException("Unexpected error")).when(userService).deleteUser(any(UserDeleteDto.class));
+        doThrow(new RuntimeException("Unexpected error")).when(userRepository).deleteByUsername(userDeleteDto.getUsername());
 
         webTestClient.method(HttpMethod.DELETE)
                 .uri("/users/delete")
