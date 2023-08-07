@@ -50,7 +50,7 @@ public class AssetService {
             portfolioItemRepository.save(pfItem);
         } else {
             PortfolioItem previousItem = pfItemList.get(0);
-            PortfolioItem pfItem = new PortfolioItem(user, transactionDto.getAssetSymbol(), transactionDto.getQuantity(), transactionDto.getPrice() + previousItem.getTotalBoughtPrice());
+            PortfolioItem pfItem = new PortfolioItem(user, transactionDto.getAssetSymbol(), transactionDto.getQuantity() + previousItem.getQuantity(), transactionDto.getPrice() + previousItem.getTotalBoughtPrice());
             portfolioItemRepository.delete(previousItem);
             portfolioItemRepository.save(pfItem);
         }
