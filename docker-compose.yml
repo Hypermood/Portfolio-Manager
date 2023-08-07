@@ -1,18 +1,23 @@
 version: "3.9"
+
 services:
-  portfolio_manager:
+  portfolio-manager:
     build: .
-    image: portfolio_manager
-    container_name: portfolio_manager_container
+    image: portfolio-manager
+    container_name: portfolio-manager-container
     ports:
       - "8080:8080"
+    environment:
+      STOCK_API_HOST: stock-prices-mock-api-container
     depends_on:
-      mysql_database:
+      mysql-database:
         condition: service_healthy
+    networks:
+      - portfolio-manager
 
-  mysql_database:
+  mysql-database:
     image: mysql/mysql-server
-    container_name: mysql_container
+    container_name: mysql-container
     ports:
       - "1234:3306"
     environment:
@@ -21,7 +26,15 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_ROOT_HOST: "%"
     volumes:
-        - portfolio_manager_data:/var/lib/mysql
+        - portfolio-manager-data:/var/lib/mysql
+    networks:
+      - portfolio-manager
     restart: unless-stopped
+
 volumes:
-  portfolio_manager_data:
+  portfolio-manager-data:
+
+networks:
+  portfolio-manager:
+    name: portfolio-manager-network
+    external: true
