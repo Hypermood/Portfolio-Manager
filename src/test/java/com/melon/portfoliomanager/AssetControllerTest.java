@@ -45,7 +45,7 @@ public class AssetControllerTest {
     void buyAssets_NoSuchUser_ShouldReturnNoContent() {
 
 
-        TransactionDto transactionDto = new TransactionDto("vvp","IBM",5.5,223.1);
+        TransactionDto transactionDto = new TransactionDto("vvp", "IBM", 5.5, 223.1);
 
         webTestClient.post().uri("/buy/asset")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -56,13 +56,12 @@ public class AssetControllerTest {
     }
 
 
-
     @Test
     void buyAssets_ValidRequest_ShouldReturnNoContent() {
 
         when(userRepository.findByUsername(any(String.class))).thenReturn((List.of(new User("vvp", "vpavlov@melon.com", "Georgi", "Ivanov"))));
 
-        TransactionDto transactionDto = new TransactionDto("vvp","IBM",5.5,223.1);
+        TransactionDto transactionDto = new TransactionDto("vvp", "IBM", 5.5, 223.1);
 
 
         webTestClient.post().uri("/buy/asset")
@@ -77,7 +76,7 @@ public class AssetControllerTest {
 
         when(userRepository.findByUsername(any(String.class))).thenReturn((List.of(new User("vvp", "vpavlov@melon.com", "Georgi", "Ivanov"))));
 
-        TransactionDto transactionDto = new TransactionDto("vvp","IBM",-5.5,223.1);
+        TransactionDto transactionDto = new TransactionDto("vvp", "IBM", -5.5, 223.1);
 
 
         webTestClient.post().uri("/buy/asset")
@@ -93,7 +92,7 @@ public class AssetControllerTest {
 
         when(userRepository.findByUsername(any(String.class))).thenReturn((List.of(new User("vvp", "vpavlov@melon.com", "Georgi", "Ivanov"))));
 
-        TransactionDto transactionDto = new TransactionDto("vvp","IBM",5.5,-223.1);
+        TransactionDto transactionDto = new TransactionDto("vvp", "IBM", 5.5, -223.1);
 
 
         webTestClient.post().uri("/buy/asset")
@@ -103,9 +102,6 @@ public class AssetControllerTest {
                 .expectStatus().isBadRequest()
                 .expectBody(String.class).isEqualTo("[\"The price must be a positive number.\"]");
     }
-
-
-
 
 
 }

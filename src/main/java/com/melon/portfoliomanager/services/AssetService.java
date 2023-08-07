@@ -45,11 +45,10 @@ public class AssetService {
 
         List<PortfolioItem> pfItemList = portfolioItemRepository.findByUserAndCompanyName(user, transactionDto.getAssetSymbol());
 
-        if(pfItemList.isEmpty()){
+        if (pfItemList.isEmpty()) {
             PortfolioItem pfItem = new PortfolioItem(user, transactionDto.getAssetSymbol(), transactionDto.getQuantity(), transactionDto.getPrice());
             portfolioItemRepository.save(pfItem);
-        }
-        else{
+        } else {
             PortfolioItem previousItem = pfItemList.get(0);
             PortfolioItem pfItem = new PortfolioItem(user, transactionDto.getAssetSymbol(), transactionDto.getQuantity(), transactionDto.getPrice() + previousItem.getTotalBoughtPrice());
             portfolioItemRepository.delete(previousItem);
