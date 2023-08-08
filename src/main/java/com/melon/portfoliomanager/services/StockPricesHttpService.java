@@ -11,12 +11,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.net.URI;
 
 @Service
-public class HttpService {
-    private static final Logger logger = LoggerFactory.getLogger(HttpService.class);
+public class StockPricesHttpService {
+    private static final Logger logger = LoggerFactory.getLogger(StockPricesHttpService.class);
     private final WebClient webClient;
 
     @Autowired
-    public HttpService(WebClient webClient) {
+    public StockPricesHttpService(WebClient webClient) {
         this.webClient = webClient;
     }
 

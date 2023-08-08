@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class StockPricesService {
     private final double PRICE_CHANGE_PERCENT_THRESHOLD = 5;
     private final Map<String, Double> companyStocks = new HashMap<>();
-    private final HttpService httpService;
+    private final StockPricesHttpService stockPricesHttpService;
     private final NotificationService notificationService;
 
     @Value("${stock.api.host}")
@@ -26,8 +26,8 @@ public class StockPricesService {
     private String stockApiPort;
 
     @Autowired
-    public StockPricesService(HttpService httpService, NotificationService notificationService) {
-        this.httpService = httpService;
+    public StockPricesService(StockPricesHttpService stockPricesHttpService, NotificationService notificationService) {
+        this.stockPricesHttpService = stockPricesHttpService;
         this.notificationService = notificationService;
     }
 
@@ -42,7 +42,7 @@ public class StockPricesService {
 
     private StockPricesDTO fetchLatestCompanyStocks() {
         URI url = URI.create(String.format("http://%s:%s/stock/prices", stockApiHost, stockApiPort));
-        ResponseEntity<StockPricesDTO> response = httpService.getStockPrices(url);
+        ResponseEntity<StockPricesDTO> response = stockPricesHttpService.getStockPrices(url);
         return response.getBody();
     }
 

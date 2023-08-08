@@ -3,16 +3,16 @@ package com.melon.portfoliomanager.dtos;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public class UserDto {
 
-    @NotNull(message = "Invalid user input. The username is null.")
+    @NotBlank(message = "Invalid user input. The username is blank.")
     @Column(name = "username", unique = true)
     private String username;
 
     @Email(message = "Invalid user input. The email should be valid.")
-    @NotNull(message = "Invalid user input. The email is null.")
+    @NotBlank(message = "Invalid user input. The email is blank.")
     @Column(name = "email")
     private String email;
 

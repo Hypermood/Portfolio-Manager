@@ -20,11 +20,11 @@ public class StockPricesServiceTests {
     public static class TestConfiguration {
         @Bean
         @Primary
-        public HttpService httpServiceMock() {
-            HttpService httpService = mock(HttpService.class);
+        public StockPricesHttpService stockPricesHttpServiceMock() {
+            StockPricesHttpService stockPricesHttpService = mock(StockPricesHttpService.class);
             StockPricesDTO stockPricesDTO = new StockPricesDTO(Map.of("IBM", 1.23, "FB", 2.34));
-            doReturn(ResponseEntity.status(HttpStatus.OK).body(stockPricesDTO)).when(httpService).getStockPrices(any());
-            return httpService;
+            doReturn(ResponseEntity.status(HttpStatus.OK).body(stockPricesDTO)).when(stockPricesHttpService).getStockPrices(any());
+            return stockPricesHttpService;
         }
 
         @Bean
@@ -35,14 +35,14 @@ public class StockPricesServiceTests {
     }
 
     @Autowired
-    private HttpService httpService;
+    private StockPricesHttpService stockPricesHttpService;
 
     @Autowired
     private NotificationService notificationService;
 
     @Test
     public void testNotifyUserAboutExtremePriceChangesWillSucceed() {
-        verify(httpService, times(1)).getStockPrices(any());
+        verify(stockPricesHttpService, times(1)).getStockPrices(any());
         verify(notificationService, times(1)).notifyUser(any());
     }
 }
