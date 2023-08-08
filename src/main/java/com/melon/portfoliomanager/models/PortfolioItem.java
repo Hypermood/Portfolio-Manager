@@ -12,11 +12,13 @@ public class PortfolioItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "user_id")
     private Long userId;
 
     @Column(name = "company_name")
     private String companyName;
 
+    @Column(name = "quantity")
     private Double quantity;
 
     @Column(name = "total_bought_price")

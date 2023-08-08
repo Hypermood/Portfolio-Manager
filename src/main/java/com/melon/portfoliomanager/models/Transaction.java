@@ -10,24 +10,25 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_id")
+    private Long userId;
 
+    @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private TransactionType type;
 
     @Column(name = "company_name")
     private String companyName;
 
+    @Column(name = "quantity")
     private Double quantity;
 
     @Column(name = "stock_price")
     private Double stockPrice;
 
 
-    public Transaction(User user, TransactionType type, String companyName, Double quantity, Double stockPrice) {
-        this.user = user;
+    public Transaction(Long userId, TransactionType type, String companyName, Double quantity, Double stockPrice) {
+        this.userId = userId;
         this.type = type;
         this.companyName = companyName;
         this.quantity = quantity;
@@ -45,14 +46,13 @@ public class Transaction {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
-
 
     public TransactionType getType() {
         return type;

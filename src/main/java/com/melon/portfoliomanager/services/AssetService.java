@@ -56,7 +56,7 @@ public class AssetService {
 
     private void saveTransaction(TransactionDto transactionDto, User user) {
 
-        Transaction transaction = new Transaction(user, TransactionType.BUY, transactionDto.getAssetSymbol(), transactionDto.getQuantity(), transactionDto.getPrice());
+        Transaction transaction = new Transaction(user.getId(), TransactionType.BUY, transactionDto.getAssetSymbol(), transactionDto.getQuantity(), transactionDto.getPrice());
 
         transactionRepository.save(transaction);
     }
