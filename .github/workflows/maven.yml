@@ -25,7 +25,7 @@ jobs:
       - name: Build and run docker containers
         run: docker compose up -d
       - name: Run tests
-        run: docker exec portfolio_manager_container ./mvnw verify
+        run: docker exec portfolio-manager-container ./mvnw verify
 
       # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
       - name: Update dependency graph
