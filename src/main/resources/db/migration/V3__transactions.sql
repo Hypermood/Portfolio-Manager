@@ -6,7 +6,7 @@ CREATE TABLE transactions (
     stock_price DOUBLE NOT NULL,
     user_id BIGINT UNSIGNED NOT NULL,
     CONSTRAINT fk_transactions_users_id FOREIGN KEY (user_id)
-    REFERENCES users(id),
+    REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW() on UPDATE NOW()
 );

@@ -32,29 +32,44 @@ public class AssetService {
 
     public void buyStock(TransactionDto transactionDto) {
 
+        User user = validateUser(transactionDto);
+
+        saveTransaction(transactionDto, user);
+
+        List<PortfolioItem> portfolioItemsList = portfolioItemRepository.findByUserIdAndCompanyName(user.getId(), transactionDto.getAssetSymbol());
+
+        PortfolioItem portfolioItem;
+
+        if (portfolioItemsList.isEmpty()) {
+
+            portfolioItem = new PortfolioItem(user.getId(), transactionDto.getAssetSymbol(), transactionDto.getQuantity(), transactionDto.getPrice());
+
+        } else {
+            portfolioItem = portfolioItemsList.get(0);
+            portfolioItem.setQuantity(portfolioItem.getQuantity() + transactionDto.getQuantity());
+            portfolioItem.setQuantity(portfolioItem.getTotalBoughtPrice() + transactionDto.getPrice());
+
+        }
+        portfolioItemRepository.save(portfolioItem);
+
+    }
+
+    private void saveTransaction(TransactionDto transactionDto, User user) {
+
+        Transaction transaction = new Transaction(user, TransactionType.BUY, transactionDto.getAssetSymbol(), transactionDto.getQuantity(), transactionDto.getPrice());
+
+        transactionRepository.save(transaction);
+    }
+
+    public User validateUser(TransactionDto transactionDto) {
         List<User> userList = userRepository.findByUsername(transactionDto.getUsername());
 
         if (userList.isEmpty()) {
             throw new NoSuchUserException("There is no user with such username. Enter a valid username.");
         }
 
-        User user = userList.get(0);
-        Transaction transaction = new Transaction(user, TransactionType.BUY, transactionDto.getAssetSymbol(), transactionDto.getQuantity(), transactionDto.getPrice());
-
-        transactionRepository.save(transaction);
-
-        List<PortfolioItem> pfItemList = portfolioItemRepository.findByUserAndCompanyName(user, transactionDto.getAssetSymbol());
-
-        if (pfItemList.isEmpty()) {
-            PortfolioItem pfItem = new PortfolioItem(user, transactionDto.getAssetSymbol(), transactionDto.getQuantity(), transactionDto.getPrice());
-            portfolioItemRepository.save(pfItem);
-        } else {
-            PortfolioItem previousItem = pfItemList.get(0);
-            PortfolioItem pfItem = new PortfolioItem(user, transactionDto.getAssetSymbol(), transactionDto.getQuantity() + previousItem.getQuantity(), transactionDto.getPrice() + previousItem.getTotalBoughtPrice());
-            portfolioItemRepository.delete(previousItem);
-            portfolioItemRepository.save(pfItem);
-        }
-
-
+        return userList.get(0);
     }
+
+
 }

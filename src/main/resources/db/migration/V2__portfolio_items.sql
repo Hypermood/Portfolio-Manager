@@ -5,7 +5,7 @@ CREATE TABLE portfolio_items (
     total_bought_price DOUBLE NOT NULL,
     user_id BIGINT UNSIGNED NOT NULL,
     CONSTRAINT fk_portfolio_items_users_id FOREIGN KEY (user_id)
-    REFERENCES users(id),
+    REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW() ON UPDATE NOW()
 );

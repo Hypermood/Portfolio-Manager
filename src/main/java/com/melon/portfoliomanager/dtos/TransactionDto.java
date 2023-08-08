@@ -14,11 +14,12 @@ public class TransactionDto {
 
     @NotNull
     @DecimalMin("0.01")
-    @Digits(integer = 1000000000, fraction = 4, message = "Value must contain up to 4 digits in the fraction part and must be a positive number.")
+    @Digits(integer = 1000000000, fraction = 2, message = "Value must contain up to 2 digits in the fraction part and must be a positive number.")
     private Double quantity;
 
     @NotNull
     @DecimalMin(value = "0.01", message = "The price must be a positive number.")
+    @Digits(integer = 1000000000, fraction = 2, message = "Value must contain up to 2 digits in the fraction part and must be a positive number.")
     private Double price;
 
 

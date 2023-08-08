@@ -12,9 +12,7 @@ public class PortfolioItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Long userId;
 
     @Column(name = "company_name")
     private String companyName;
@@ -24,8 +22,8 @@ public class PortfolioItem {
     @Column(name = "total_bought_price")
     private Double totalBoughtPrice;
 
-    public PortfolioItem(User user, String companyName, Double quantity, Double totalBoughtPrice) {
-        this.user = user;
+    public PortfolioItem(Long userId, String companyName, Double quantity, Double totalBoughtPrice) {
+        this.userId = userId;
         this.companyName = companyName;
         this.quantity = quantity;
         this.totalBoughtPrice = totalBoughtPrice;
@@ -42,12 +40,12 @@ public class PortfolioItem {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getCompanyName() {
