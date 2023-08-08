@@ -38,4 +38,3 @@ volumes:
 networks:
   portfolio-manager:
     name: portfolio-manager-network
-    external: true
