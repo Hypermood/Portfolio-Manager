@@ -40,7 +40,7 @@ public class UserService {
 
         long res = userRepository.deleteByUsername(userDeleteDto.getUsername());
 
-        if(res == 0){
+        if (res == 0) {
             throw new NoSuchUserException("There is no such user in the database.");
         }
 
