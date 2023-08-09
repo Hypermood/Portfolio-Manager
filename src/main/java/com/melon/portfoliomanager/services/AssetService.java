@@ -73,7 +73,7 @@ public class AssetService {
         return userList.get(0);
     }
 
-    public void sellStock(TransactionDto transactionDto){
+    public void sellStock(TransactionDto transactionDto) {
 
         User user = validateUser(transactionDto);
 
@@ -81,20 +81,19 @@ public class AssetService {
 
         PortfolioItem portfolioItem;
 
-        if(portfolioItemList.isEmpty()){
+        if (portfolioItemList.isEmpty()) {
             throw new NotEnoughStocksToSell();
         }
 
         portfolioItem = portfolioItemList.get(0);
 
-        if(portfolioItem.getQuantity() < transactionDto.getQuantity()){
+        if (portfolioItem.getQuantity() < transactionDto.getQuantity()) {
             throw new NotEnoughStocksToSell();
         }
 
-        if(Objects.equals(portfolioItem.getQuantity(), transactionDto.getQuantity())){
+        if (Objects.equals(portfolioItem.getQuantity(), transactionDto.getQuantity())) {
             portfolioItemRepository.delete(portfolioItem);
-        }
-        else{
+        } else {
             portfolioItem.setQuantity(portfolioItem.getQuantity() - transactionDto.getQuantity());
         }
 
