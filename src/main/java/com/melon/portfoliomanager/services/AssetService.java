@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AssetService {
@@ -90,20 +91,15 @@ public class AssetService {
             throw new NotEnoughStocksToSell();
         }
 
-        // Assuming that the POST request contains the total price of all sold assets in the transaction, i.e 3 stocks sold for 400$ in total.
-        if(portfolioItem.getTotalBoughtPrice() <= transactionDto.getPrice()){
+        if(Objects.equals(portfolioItem.getQuantity(), transactionDto.getQuantity())){
             portfolioItemRepository.delete(portfolioItem);
         }
         else{
             portfolioItem.setQuantity(portfolioItem.getQuantity() - transactionDto.getQuantity());
-            portfolioItem.setTotalBoughtPrice(portfolioItem.getTotalBoughtPrice() - transactionDto.getPrice());
         }
 
         saveTransaction(transactionDto, user, TransactionType.SELL);
 
     }
-
-
-
 
 }
