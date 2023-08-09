@@ -3,6 +3,7 @@ package com.melon.portfoliomanager.services;
 
 import com.melon.portfoliomanager.dtos.TransactionDto;
 import com.melon.portfoliomanager.exceptions.NoSuchUserException;
+import com.melon.portfoliomanager.exceptions.NotEnoughStocksToSell;
 import com.melon.portfoliomanager.models.PortfolioItem;
 import com.melon.portfoliomanager.models.Transaction;
 import com.melon.portfoliomanager.models.TransactionType;
@@ -34,7 +35,7 @@ public class AssetService {
 
         User user = validateUser(transactionDto);
 
-        saveTransaction(transactionDto, user);
+        saveTransaction(transactionDto, user, TransactionType.BUY);
 
         List<PortfolioItem> portfolioItemsList = portfolioItemRepository.findByUserIdAndCompanyName(user.getId(), transactionDto.getAssetSymbol());
 
@@ -54,9 +55,9 @@ public class AssetService {
 
     }
 
-    private void saveTransaction(TransactionDto transactionDto, User user) {
+    private void saveTransaction(TransactionDto transactionDto, User user, TransactionType type) {
 
-        Transaction transaction = new Transaction(user.getId(), TransactionType.BUY, transactionDto.getAssetSymbol(), transactionDto.getQuantity(), transactionDto.getPrice());
+        Transaction transaction = new Transaction(user.getId(), type, transactionDto.getAssetSymbol(), transactionDto.getQuantity(), transactionDto.getPrice());
 
         transactionRepository.save(transaction);
     }
@@ -70,6 +71,39 @@ public class AssetService {
 
         return userList.get(0);
     }
+
+    public void sellStock(TransactionDto transactionDto){
+
+        User user = validateUser(transactionDto);
+
+        List<PortfolioItem> portfolioItemList = portfolioItemRepository.findByUserIdAndCompanyName(user.getId(), transactionDto.getAssetSymbol());
+
+        PortfolioItem portfolioItem;
+
+        if(portfolioItemList.isEmpty()){
+            throw new NotEnoughStocksToSell();
+        }
+
+        portfolioItem = portfolioItemList.get(0);
+
+        if(portfolioItem.getQuantity() < transactionDto.getQuantity()){
+            throw new NotEnoughStocksToSell();
+        }
+
+        // Assuming that the POST request contains the total price of all sold assets in the transaction, i.e 3 stocks sold for 400$ in total.
+        if(portfolioItem.getTotalBoughtPrice() <= transactionDto.getPrice()){
+            portfolioItemRepository.delete(portfolioItem);
+        }
+        else{
+            portfolioItem.setQuantity(portfolioItem.getQuantity() - transactionDto.getQuantity());
+            portfolioItem.setTotalBoughtPrice(portfolioItem.getTotalBoughtPrice() - transactionDto.getPrice());
+        }
+
+        saveTransaction(transactionDto, user, TransactionType.SELL);
+
+    }
+
+
 
 
 }

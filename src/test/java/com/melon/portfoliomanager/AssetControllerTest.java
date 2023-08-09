@@ -2,6 +2,8 @@ package com.melon.portfoliomanager;
 
 
 import com.melon.portfoliomanager.dtos.TransactionDto;
+import com.melon.portfoliomanager.exceptions.NotEnoughStocksToSell;
+import com.melon.portfoliomanager.models.PortfolioItem;
 import com.melon.portfoliomanager.models.User;
 import com.melon.portfoliomanager.repositories.PortfolioItemRepository;
 import com.melon.portfoliomanager.repositories.TransactionRepository;
@@ -126,5 +128,61 @@ public class AssetControllerTest {
 
     }
 
+    @Test
+    void sellAssets_NoSuchUser_ShouldReturnBadRequest() {
+        TransactionDto transactionDto = new TransactionDto("invalidUsername", "IBM", 5.5, 223.1);
+
+        webTestClient.post().uri("/sell/asset")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(transactionDto))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(String.class).isEqualTo("There is no user with such username. Enter a valid username.");
+    }
+
+    @Test
+    void sellAssets_ValidRequest_ShouldReturnNoContent() {
+        when(userRepository.findByUsername(any(String.class))).thenReturn(List.of(new User(5L,"vvp", "vpavlov@melon.com", "Georgi", "Ivanov")));
+        when(portfolioItemRepository.findByUserIdAndCompanyName(any(), any())).thenReturn(List.of(new PortfolioItem(5L,"IBM",10.0,800.0)));
+
+        TransactionDto transactionDto = new TransactionDto("vvp", "IBM", 5.5, 223.1);
+
+        webTestClient.post().uri("/sell/asset")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(transactionDto))
+                .exchange()
+                .expectStatus().isNoContent();
+    }
+
+    @Test
+    void sellAssets_NotEnoughStocks_ShouldReturnBadRequest() {
+        when(userRepository.findByUsername(any(String.class))).thenReturn(List.of(new User(5L,"vvp", "vpavlov@melon.com", "Georgi", "Ivanov")));
+        when(portfolioItemRepository.findByUserIdAndCompanyName(any(), any())).thenReturn(List.of(new PortfolioItem(5L,"IBM",2.0,160.0)));
+
+        TransactionDto transactionDto = new TransactionDto("vvp", "IBM", 5.5, 223.1);
+
+        webTestClient.post().uri("/sell/asset")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(transactionDto))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(String.class).isEqualTo("The user does not have enough stocks to sell such amount as per the request.");
+    }
+
+    @Test
+    void sellAssets_UnexpectedError_ShouldReturnInternalServerError(CapturedOutput capturedOutput) {
+        TransactionDto transactionDto = new TransactionDto("vvp", "IBM", 5.5, 223.1);
+        when(userRepository.findByUsername(any(String.class))).thenReturn(List.of(new User("vvp", "vpavlov@melon.com", "Georgi", "Ivanov")));
+        doThrow(new RuntimeException("Unexpected error")).when(portfolioItemRepository).findByUserIdAndCompanyName(any(), any());
+
+        webTestClient.post().uri("/sell/asset")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(transactionDto))
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
+                .expectBody(String.class).isEqualTo("Internal Server Error.");
+
+        assertTrue(capturedOutput.getOut().contains("Unexpected error"));
+    }
 
 }

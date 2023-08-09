@@ -38,6 +38,14 @@ public class User {
         this.lastName = lastName;
     }
 
+    public User(Long id, String username, String email, String firstName, String lastName) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public Long getId() {
         return id;
     }
