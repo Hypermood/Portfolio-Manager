@@ -1,39 +1,33 @@
 package com.melon.portfoliomanager.services;
 
 import com.melon.portfoliomanager.dtos.responses.StockPricesDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
-
 @Service
 public class StockPricesService {
+    private static final Logger logger = LoggerFactory.getLogger(StockPricesService.class);
     private final CompanyStocksManager companyStocksManager = new CompanyStocksManager();
     private final StockPricesHttpService stockPricesHttpService;
 
-    @Value("${stock.api.host}")
-    private String stockApiHost;
-
-    @Value("${stock.api.port}")
-    private String stockApiPort;
-
     @Autowired
-    public StockPricesService(StockPricesHttpService stockPricesHttpService) {
+    public StockPricesService(@Qualifier("stock-prices-mock-api") StockPricesHttpService stockPricesHttpService) {
         this.stockPricesHttpService = stockPricesHttpService;
     }
 
     @Scheduled(fixedDelay = 15 * 60 * 1000)
     private void fetchCompanyStocks() {
-        StockPricesDTO latestCompanyStocks = fetchLatestCompanyStocks();
-        companyStocksManager.updateCompanyStockPrices(latestCompanyStocks.getStockPrices());
-    }
-
-    private StockPricesDTO fetchLatestCompanyStocks() {
-        URI url = URI.create(String.format("http://%s:%s/stock/prices", stockApiHost, stockApiPort));
-        ResponseEntity<StockPricesDTO> response = stockPricesHttpService.getStockPrices(url);
-        return response.getBody();
+        try {
+            ResponseEntity<?> stockPricesResponse = stockPricesHttpService.getStockPrices();
+            StockPricesDTO latestCompanyStocks = (StockPricesDTO) stockPricesResponse.getBody();
+            companyStocksManager.updateCompanyStockPrices(latestCompanyStocks.getStockPrices());
+        } catch (Exception e) {
+            logger.error(String.format("Error while fetching data from stock prices API ! exception=%s", e));
+        }
     }
 }
