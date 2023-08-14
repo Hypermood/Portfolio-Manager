@@ -1,5 +1,6 @@
 package com.melon.portfoliomanager.responses;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class AnalyticsResponse {
@@ -13,9 +14,9 @@ public class AnalyticsResponse {
 
     public AnalyticsResponse(String userName, Double totalPortfolioValue, Double totalPortfolioGainVal, Double totalPortfolioGainPct, List<AssetStat> assets) {
         this.username = userName;
-        this.totalPortfolioValue = totalPortfolioValue;
-        this.totalPortfolioGainVal = totalPortfolioGainVal;
-        this.totalPortfolioGainPct = totalPortfolioGainPct;
+        this.totalPortfolioValue = Double.valueOf(new DecimalFormat("#.##").format(totalPortfolioValue));
+        this.totalPortfolioGainVal = Double.valueOf(new DecimalFormat("#.##").format(totalPortfolioGainVal));
+        this.totalPortfolioGainPct = Double.valueOf(new DecimalFormat("#.##").format(totalPortfolioGainPct));
         this.assets = assets;
     }
 
@@ -35,7 +36,7 @@ public class AnalyticsResponse {
     }
 
     public void setTotalPortfolioValue(Double totalPortfolioValue) {
-        this.totalPortfolioValue = totalPortfolioValue;
+        this.totalPortfolioValue = Double.valueOf(new DecimalFormat("#.##").format(totalPortfolioValue));
     }
 
     public Double getTotalPortfolioGainVal() {
@@ -43,7 +44,7 @@ public class AnalyticsResponse {
     }
 
     public void setTotalPortfolioGainVal(Double totalPortfolioGainVal) {
-        this.totalPortfolioGainVal = totalPortfolioGainVal;
+        this.totalPortfolioGainVal = Double.valueOf(new DecimalFormat("#.##").format(totalPortfolioGainVal));
     }
 
     public Double getTotalPortfolioGainPct() {
@@ -51,7 +52,8 @@ public class AnalyticsResponse {
     }
 
     public void setTotalPortfolioGainPct(Double totalPortfolioGainPct) {
-        this.totalPortfolioGainPct = totalPortfolioGainPct;
+
+        this.totalPortfolioGainPct = Double.valueOf(new DecimalFormat("#.##").format(totalPortfolioGainPct));
     }
 
     public List<AssetStat> getAssets() {
