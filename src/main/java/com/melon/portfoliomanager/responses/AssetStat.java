@@ -1,5 +1,7 @@
 package com.melon.portfoliomanager.responses;
 
+import java.text.DecimalFormat;
+
 public class AssetStat {
 
     private String company;
@@ -10,9 +12,9 @@ public class AssetStat {
 
     public AssetStat(String company, Double gainVal, Double gainPct, Double allocation) {
         this.company = company;
-        this.gainVal = gainVal;
-        this.gainPct = gainPct;
-        this.allocation = allocation;
+        this.gainVal = Double.valueOf(new DecimalFormat("#.##").format(gainVal));
+        this.gainPct = Double.valueOf(new DecimalFormat("#.##").format(gainPct));
+        this.allocation = Double.valueOf(new DecimalFormat("#.##").format(allocation));
     }
 
 
@@ -32,7 +34,7 @@ public class AssetStat {
     }
 
     public void setGainVal(Double gainVal) {
-        this.gainVal = gainVal;
+        this.gainVal = Double.valueOf(new DecimalFormat("#.##").format(gainVal));
     }
 
     public Double getGainPct() {
@@ -40,7 +42,7 @@ public class AssetStat {
     }
 
     public void setGainPct(Double gainPct) {
-        this.gainPct = gainPct;
+        this.gainPct = Double.valueOf(new DecimalFormat("#.##").format(gainPct));
     }
 
     public Double getAllocation() {
@@ -48,6 +50,6 @@ public class AssetStat {
     }
 
     public void setAllocation(Double allocation) {
-        this.allocation = allocation;
+        this.allocation = Double.valueOf(new DecimalFormat("#.##").format(allocation));
     }
 }
