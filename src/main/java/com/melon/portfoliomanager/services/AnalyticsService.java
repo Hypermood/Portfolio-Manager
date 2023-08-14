@@ -17,6 +17,7 @@ import java.util.List;
 @Service
 public class AnalyticsService {
 
+    //To be removed if not used
     private TransactionRepository transactionRepository;
     private PortfolioItemRepository portfolioItemRepository;
     private UserRepository userRepository;
@@ -33,7 +34,7 @@ public class AnalyticsService {
 
         List<User> userOp = userRepository.findByUsername(username);
 
-        if(userOp.isEmpty()){
+        if (userOp.isEmpty()) {
             throw new NoSuchUserException("There is no such user.");
         }
 
@@ -53,7 +54,7 @@ public class AnalyticsService {
 
             assetStat.setGainVal(currentValue - item.getTotalBoughtPrice());
 
-            assetStat.setGainPct( ((currentValue / item.getTotalBoughtPrice()) - 1) * 100 );
+            assetStat.setGainPct(((currentValue / item.getTotalBoughtPrice()) - 1) * 100);
 
             assets.add(assetStat);
 
@@ -69,7 +70,7 @@ public class AnalyticsService {
         double totalPortfolioGainPct = ((totalPortfolioValue / totalSpent) - 1) * 100;
 
         AnalyticsResponse analyticsDto = new AnalyticsResponse();
-        analyticsDto.setUserName(username);
+        analyticsDto.setUsername(username);
         analyticsDto.setTotalPortfolioValue(totalPortfolioValue);
         analyticsDto.setTotalPortfolioGainVal(totalPortfolioGainVal);
         analyticsDto.setTotalPortfolioGainPct(totalPortfolioGainPct);
