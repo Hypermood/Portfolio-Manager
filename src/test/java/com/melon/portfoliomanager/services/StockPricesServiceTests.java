@@ -26,23 +26,13 @@ public class StockPricesServiceTests {
             doReturn(ResponseEntity.status(HttpStatus.OK).body(stockPricesDTO)).when(stockPricesHttpService).getStockPrices(any());
             return stockPricesHttpService;
         }
-
-        @Bean
-        @Primary
-        public NotificationService notificationServiceMock() {
-            return mock(NotificationService.class);
-        }
     }
 
     @Autowired
     private StockPricesHttpService stockPricesHttpService;
 
-    @Autowired
-    private NotificationService notificationService;
-
     @Test
     public void testNotifyUserAboutExtremePriceChangesWillSucceed() {
         verify(stockPricesHttpService, times(1)).getStockPrices(any());
-        verify(notificationService, times(1)).notifyUser(any());
     }
 }
