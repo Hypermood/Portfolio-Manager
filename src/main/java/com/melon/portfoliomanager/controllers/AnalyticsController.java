@@ -29,7 +29,7 @@ public class AnalyticsController {
     public ResponseEntity<?> getAnalytics(@RequestParam(value = "username", required = false) String username) {
 
         if (username == null || username.trim().isEmpty()) {
-            return new ResponseEntity<>("Missing or empty userName parameter.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Missing or empty username parameter.", HttpStatus.BAD_REQUEST);
         }
 
         try {
