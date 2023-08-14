@@ -2,7 +2,7 @@ package com.melon.portfoliomanager.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 
 @Entity
@@ -13,12 +13,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Invalid user input. The username is null.")
+    @NotBlank(message = "Invalid user input. The username is blank.")
     @Column(name = "username", unique = true)
     private String username;
 
     @Email(message = "Invalid user input. The email should be valid.")
-    @NotNull(message = "Invalid user input. The email is null.")
+    @NotBlank(message = "Invalid user input. The email is blank.")
     @Column(name = "email")
     private String email;
 

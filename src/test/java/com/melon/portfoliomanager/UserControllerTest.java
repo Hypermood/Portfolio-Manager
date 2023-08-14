@@ -69,17 +69,17 @@ public class UserControllerTest {
                 .body(BodyInserters.fromValue(new UserDto("georgi", null, "v", "p")))
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(String.class).isEqualTo("[\"Invalid user input. The email is null.\"]");
+                .expectBody(String.class).isEqualTo("[\"Invalid user input. The email is blank.\"]");
     }
 
     @Test
     void createUser_InvalidRequest_WrongUsername_ShouldReturnBadRequest() {
         webTestClient.post().uri("/users/add")
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(new UserDto(null, "", "v", "p")))
+                .body(BodyInserters.fromValue(new UserDto(null, "email@somewhere.com", "v", "p")))
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(String.class).isEqualTo("[\"Invalid user input. The username is null.\"]");
+                .expectBody(String.class).isEqualTo("[\"Invalid user input. The username is blank.\"]");
     }
 
     @Test
@@ -120,7 +120,7 @@ public class UserControllerTest {
                 .uri("/users/delete")
                 .body(BodyInserters.fromValue(userDeleteDto))
                 .exchange().expectStatus().isBadRequest()
-                .expectBody(String.class).isEqualTo("[\"The specified username can't be null when requesting to delete a user.\"]");
+                .expectBody(String.class).isEqualTo("[\"The specified username can't be blank when requesting to delete a user.\"]");
     }
 
     @Test
