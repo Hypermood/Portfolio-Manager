@@ -1,4 +1,4 @@
-package com.melon.portfoliomanager;
+package com.melon.portfoliomanager.controllers;
 
 
 import com.melon.portfoliomanager.dtos.TransactionDto;

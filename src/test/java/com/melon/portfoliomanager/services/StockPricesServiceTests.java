@@ -28,13 +28,26 @@ public class StockPricesServiceTests {
                     .when(stockPricesHttpService).getStockPrices();
             return stockPricesHttpService;
         }
+
+        @Bean
+        @Qualifier("kafka")
+        @Primary
+        public MessageBrokerService messageBrokerServiceMock() {
+            return mock(MessageBrokerService.class);
+        }
     }
 
     @Autowired
+    @Qualifier("stock-prices-mock-api")
     private StockPricesHttpService stockPricesHttpService;
+
+    @Autowired
+    @Qualifier("kafka")
+    private MessageBrokerService messageBrokerService;
 
     @Test
     public void testFetchCompanyStocksWillSucceed() {
         verify(stockPricesHttpService, times(1)).getStockPrices();
+        verify(messageBrokerService, times(1)).sendMessage(any(Map.class));
     }
 }
