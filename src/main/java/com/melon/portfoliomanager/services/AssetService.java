@@ -49,7 +49,7 @@ public class AssetService {
         } else {
             portfolioItem = portfolioItemsList.get(0);
             portfolioItem.setQuantity(portfolioItem.getQuantity() + transactionDto.getQuantity());
-            portfolioItem.setTotalSoldBrice(portfolioItem.getTotalBoughtPrice() + transactionDto.getPrice());
+            portfolioItem.setTotalBoughtPrice(portfolioItem.getTotalBoughtPrice() + transactionDto.getPrice());
 
         }
         portfolioItemRepository.save(portfolioItem);
@@ -94,7 +94,7 @@ public class AssetService {
             portfolioItemRepository.delete(portfolioItem);
         } else {
             portfolioItem.setQuantity(portfolioItem.getQuantity() - transactionDto.getQuantity());
-            portfolioItem.setTotalSoldBrice(portfolioItem.getTotalSoldBrice() + transactionDto.getPrice());
+            portfolioItem.setTotalSoldPrice(portfolioItem.getTotalSoldPrice() + transactionDto.getPrice());
         }
 
         saveTransaction(transactionDto, user, TransactionType.SELL);
