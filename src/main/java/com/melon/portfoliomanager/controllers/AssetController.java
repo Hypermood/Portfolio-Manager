@@ -37,7 +37,7 @@ public class AssetController {
         } catch (NoSuchUserException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            logger.error(String.format("Unexpected error occurred during creating user ! exception=%s", e));
+            logger.error(String.format("Unexpected error occurred during buying stocks ! exception=%s", e));
             return new ResponseEntity<>("Internal Server Error.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -54,7 +54,7 @@ public class AssetController {
         } catch (NotEnoughStocksToSell e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            logger.error(String.format("Unexpected error occurred during creating user ! exception=%s", e));
+            logger.error(String.format("Unexpected error occurred during selling stocks ! exception=%s", e));
             return new ResponseEntity<>("Internal Server Error.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -44,12 +44,12 @@ public class AssetService {
 
         if (portfolioItemsList.isEmpty()) {
 
-            portfolioItem = new PortfolioItem(user.getId(), transactionDto.getAssetSymbol(), transactionDto.getQuantity(), transactionDto.getPrice());
+            portfolioItem = new PortfolioItem(user.getId(), transactionDto.getAssetSymbol(), transactionDto.getQuantity(), transactionDto.getPrice(), 0.0);
 
         } else {
             portfolioItem = portfolioItemsList.get(0);
             portfolioItem.setQuantity(portfolioItem.getQuantity() + transactionDto.getQuantity());
-            portfolioItem.setQuantity(portfolioItem.getTotalBoughtPrice() + transactionDto.getPrice());
+            portfolioItem.setTotalSoldBrice(portfolioItem.getTotalBoughtPrice() + transactionDto.getPrice());
 
         }
         portfolioItemRepository.save(portfolioItem);
@@ -79,12 +79,11 @@ public class AssetService {
 
         List<PortfolioItem> portfolioItemList = portfolioItemRepository.findByUserIdAndCompanyName(user.getId(), transactionDto.getAssetSymbol());
 
-        PortfolioItem portfolioItem;
-
         if (portfolioItemList.isEmpty()) {
             throw new NotEnoughStocksToSell();
         }
 
+        PortfolioItem portfolioItem;
         portfolioItem = portfolioItemList.get(0);
 
         if (portfolioItem.getQuantity() < transactionDto.getQuantity()) {
@@ -95,6 +94,7 @@ public class AssetService {
             portfolioItemRepository.delete(portfolioItem);
         } else {
             portfolioItem.setQuantity(portfolioItem.getQuantity() - transactionDto.getQuantity());
+            portfolioItem.setTotalSoldBrice(portfolioItem.getTotalSoldBrice() + transactionDto.getPrice());
         }
 
         saveTransaction(transactionDto, user, TransactionType.SELL);

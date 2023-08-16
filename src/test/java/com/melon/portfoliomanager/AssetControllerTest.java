@@ -2,7 +2,6 @@ package com.melon.portfoliomanager;
 
 
 import com.melon.portfoliomanager.dtos.TransactionDto;
-import com.melon.portfoliomanager.exceptions.NotEnoughStocksToSell;
 import com.melon.portfoliomanager.models.PortfolioItem;
 import com.melon.portfoliomanager.models.User;
 import com.melon.portfoliomanager.repositories.PortfolioItemRepository;
@@ -142,8 +141,12 @@ public class AssetControllerTest {
 
     @Test
     void sellAssets_ValidRequest_ShouldReturnNoContent() {
-        when(userRepository.findByUsername(any(String.class))).thenReturn(List.of(new User(5L,"vvp", "vpavlov@melon.com", "Georgi", "Ivanov")));
-        when(portfolioItemRepository.findByUserIdAndCompanyName(any(), any())).thenReturn(List.of(new PortfolioItem(5L,"IBM",10.0,800.0)));
+
+        User us1 = new User("vvp", "vpavlov@melon.com", "Georgi", "Ivanov");
+        us1.setId(5L);
+
+        when(userRepository.findByUsername(any(String.class))).thenReturn(List.of(us1));
+        when(portfolioItemRepository.findByUserIdAndCompanyName(any(), any())).thenReturn(List.of(new PortfolioItem(5L, "IBM", 10.0, 800.0, 0.0)));
 
         TransactionDto transactionDto = new TransactionDto("vvp", "IBM", 5.5, 223.1);
 
@@ -156,8 +159,12 @@ public class AssetControllerTest {
 
     @Test
     void sellAssets_NotEnoughStocks_ShouldReturnBadRequest() {
-        when(userRepository.findByUsername(any(String.class))).thenReturn(List.of(new User(5L,"vvp", "vpavlov@melon.com", "Georgi", "Ivanov")));
-        when(portfolioItemRepository.findByUserIdAndCompanyName(any(), any())).thenReturn(List.of(new PortfolioItem(5L,"IBM",2.0,160.0)));
+
+        User us1 = new User("vvp", "vpavlov@melon.com", "Georgi", "Ivanov");
+        us1.setId(5L);
+
+        when(userRepository.findByUsername(any(String.class))).thenReturn(List.of(us1));
+        when(portfolioItemRepository.findByUserIdAndCompanyName(any(), any())).thenReturn(List.of(new PortfolioItem(5L, "IBM", 2.0, 160.0, 0.0)));
 
         TransactionDto transactionDto = new TransactionDto("vvp", "IBM", 5.5, 223.1);
 
