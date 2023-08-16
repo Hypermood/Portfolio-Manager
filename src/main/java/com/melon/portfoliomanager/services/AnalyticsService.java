@@ -89,9 +89,9 @@ public class AnalyticsService {
 
         if (stockPrices.containsKey(companyName)) {
             return body.getStockPrices().get(companyName);
-        } else {
-            throw new AnalyticsException("There is no such company.");
         }
+
+        return 0;
     }
 
     private double calculateCurrentStocksTotalValue(List<PortfolioItem> items) {
