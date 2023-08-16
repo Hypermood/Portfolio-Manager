@@ -1,4 +1,4 @@
-package com.melon.portfoliomanager.responses;
+package com.melon.portfoliomanager.dtos.responses;
 
 import java.text.DecimalFormat;
 

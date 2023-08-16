@@ -90,12 +90,8 @@ public class AssetService {
             throw new NotEnoughStocksToSell();
         }
 
-        if (Objects.equals(portfolioItem.getQuantity(), transactionDto.getQuantity())) {
-            portfolioItemRepository.delete(portfolioItem);
-        } else {
-            portfolioItem.setQuantity(portfolioItem.getQuantity() - transactionDto.getQuantity());
-            portfolioItem.setTotalSoldPrice(portfolioItem.getTotalSoldPrice() + transactionDto.getPrice());
-        }
+        portfolioItem.setQuantity(portfolioItem.getQuantity() - transactionDto.getQuantity());
+        portfolioItem.setTotalSoldPrice(portfolioItem.getTotalSoldPrice() + transactionDto.getPrice());
 
         saveTransaction(transactionDto, user, TransactionType.SELL);
 

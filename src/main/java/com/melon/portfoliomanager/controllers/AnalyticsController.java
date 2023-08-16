@@ -2,7 +2,7 @@ package com.melon.portfoliomanager.controllers;
 
 import com.melon.portfoliomanager.exceptions.AnalyticsException;
 import com.melon.portfoliomanager.exceptions.NoSuchUserException;
-import com.melon.portfoliomanager.responses.AnalyticsResponse;
+import com.melon.portfoliomanager.dtos.responses.AnalyticsResponse;
 import com.melon.portfoliomanager.services.AnalyticsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
