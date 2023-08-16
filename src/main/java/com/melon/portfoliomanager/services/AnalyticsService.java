@@ -1,5 +1,7 @@
 package com.melon.portfoliomanager.services;
 
+import com.melon.portfoliomanager.dtos.responses.StockPricesDTO;
+import com.melon.portfoliomanager.exceptions.AnalyticsException;
 import com.melon.portfoliomanager.exceptions.NoSuchUserException;
 import com.melon.portfoliomanager.models.PortfolioItem;
 import com.melon.portfoliomanager.models.User;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AnalyticsService {
@@ -21,16 +24,20 @@ public class AnalyticsService {
     private TransactionRepository transactionRepository;
     private PortfolioItemRepository portfolioItemRepository;
     private UserRepository userRepository;
+    private StockPricesMockApiHttpService stockPricesMockApiHttpService;
 
 
     @Autowired
-    public AnalyticsService(TransactionRepository transactionRepository, PortfolioItemRepository portfolioItemRepository, UserRepository userRepository) {
+    public AnalyticsService(TransactionRepository transactionRepository, PortfolioItemRepository portfolioItemRepository,
+                            UserRepository userRepository, StockPricesMockApiHttpService stockPricesMockApiHttpService) {
         this.transactionRepository = transactionRepository;
         this.portfolioItemRepository = portfolioItemRepository;
         this.userRepository = userRepository;
+        this.stockPricesMockApiHttpService = stockPricesMockApiHttpService;
     }
 
-    public AnalyticsResponse fetchAnalyticsForUser(String username) {
+
+    public AnalyticsResponse fetchAnalyticsForUser(String username) throws Exception {
 
         List<User> userOp = userRepository.findByUsername(username);
 
@@ -52,13 +59,13 @@ public class AnalyticsService {
             AssetStat assetStat = new AssetStat();
             assetStat.setCompany(item.getCompanyName());
 
-            assetStat.setGainVal(currentValue - item.getTotalBoughtPrice());
+            assetStat.setGainVal((currentValue + item.getTotalSoldPrice()) - item.getTotalBoughtPrice());
 
-            assetStat.setGainPct(((currentValue / item.getTotalBoughtPrice()) - 1) * 100);
+            assetStat.setGainPct((((currentValue + item.getTotalSoldPrice()) / item.getTotalBoughtPrice()) - 1) * 100);
 
             assets.add(assetStat);
 
-            totalPortfolioValue += currentValue;
+            totalPortfolioValue += (currentValue + item.getTotalSoldPrice());
             totalSpent += item.getTotalBoughtPrice();
         }
 
@@ -79,8 +86,20 @@ public class AnalyticsService {
         return analyticsDto;
     }
 
-    private double getCurrentPriceForCompany(String companyName) {
-        //To be integrated with external API
-        return 200.0;
+    private double getCurrentPriceForCompany(String companyName) throws Exception {
+
+        StockPricesDTO body = stockPricesMockApiHttpService.getStockPrices().getBody();
+
+        if (body == null) {
+            throw new Exception("Error in fetching stock prices.");
+        }
+
+        Map<String, Double> stockPrices = body.getStockPrices();
+
+        if (stockPrices.containsKey(companyName)) {
+            return body.getStockPrices().get(companyName);
+        } else {
+            throw new AnalyticsException("There is no such company.");
+        }
     }
 }

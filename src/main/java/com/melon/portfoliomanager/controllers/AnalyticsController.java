@@ -1,5 +1,6 @@
 package com.melon.portfoliomanager.controllers;
 
+import com.melon.portfoliomanager.exceptions.AnalyticsException;
 import com.melon.portfoliomanager.exceptions.NoSuchUserException;
 import com.melon.portfoliomanager.responses.AnalyticsResponse;
 import com.melon.portfoliomanager.services.AnalyticsService;
@@ -37,10 +38,9 @@ public class AnalyticsController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-        } catch (NoSuchUserException ex) {
+        } catch (NoSuchUserException | AnalyticsException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
             logger.error(String.format("Unexpected error occurred during fetching information! exception=%s", e));
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -26,7 +26,7 @@ public class AnalyticsControllerTest {
     private AnalyticsService analyticsService;
 
     @Test
-    public void testAnalyticsForUser_ValidUser_OKRequest() {
+    public void testAnalyticsForUser_ValidUser_OKRequest() throws Exception {
         AnalyticsResponse dummyAnalytics = new AnalyticsResponse();
         dummyAnalytics.setUsername("testUser");
         dummyAnalytics.setTotalPortfolioValue(1000.0);
@@ -47,7 +47,7 @@ public class AnalyticsControllerTest {
     }
 
     @Test
-    public void testAnalyticsForUser_NoSuchUser_BadRequest() {
+    public void testAnalyticsForUser_NoSuchUser_BadRequest() throws Exception {
         when(analyticsService.fetchAnalyticsForUser("invalidUser"))
                 .thenThrow(new NoSuchUserException("User not found"));
 
@@ -64,7 +64,7 @@ public class AnalyticsControllerTest {
     }
 
     @Test
-    public void testAnalyticsForUser_UnexpectedError_InternalServerError(CapturedOutput capturedOutput) {
+    public void testAnalyticsForUser_UnexpectedError_InternalServerError(CapturedOutput capturedOutput) throws Exception {
         when(analyticsService.fetchAnalyticsForUser("testUser"))
                 .thenThrow(new RuntimeException("Unexpected error"));
 
