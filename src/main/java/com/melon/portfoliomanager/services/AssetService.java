@@ -3,6 +3,7 @@ package com.melon.portfoliomanager.services;
 
 import com.melon.portfoliomanager.dtos.TransactionDto;
 import com.melon.portfoliomanager.exceptions.NoSuchUserException;
+import com.melon.portfoliomanager.exceptions.NotEnoughStocksToSell;
 import com.melon.portfoliomanager.models.PortfolioItem;
 import com.melon.portfoliomanager.models.Transaction;
 import com.melon.portfoliomanager.models.TransactionType;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AssetService {
@@ -34,7 +36,7 @@ public class AssetService {
 
         User user = validateUser(transactionDto);
 
-        saveTransaction(transactionDto, user);
+        saveTransaction(transactionDto, user, TransactionType.BUY);
 
         List<PortfolioItem> portfolioItemsList = portfolioItemRepository.findByUserIdAndCompanyName(user.getId(), transactionDto.getAssetSymbol());
 
@@ -42,21 +44,21 @@ public class AssetService {
 
         if (portfolioItemsList.isEmpty()) {
 
-            portfolioItem = new PortfolioItem(user.getId(), transactionDto.getAssetSymbol(), transactionDto.getQuantity(), transactionDto.getPrice());
+            portfolioItem = new PortfolioItem(user.getId(), transactionDto.getAssetSymbol(), transactionDto.getQuantity(), transactionDto.getPrice(), 0.0);
 
         } else {
             portfolioItem = portfolioItemsList.get(0);
             portfolioItem.setQuantity(portfolioItem.getQuantity() + transactionDto.getQuantity());
-            portfolioItem.setQuantity(portfolioItem.getTotalBoughtPrice() + transactionDto.getPrice());
+            portfolioItem.setTotalBoughtPrice(portfolioItem.getTotalBoughtPrice() + transactionDto.getPrice());
 
         }
         portfolioItemRepository.save(portfolioItem);
 
     }
 
-    private void saveTransaction(TransactionDto transactionDto, User user) {
+    private void saveTransaction(TransactionDto transactionDto, User user, TransactionType type) {
 
-        Transaction transaction = new Transaction(user.getId(), TransactionType.BUY, transactionDto.getAssetSymbol(), transactionDto.getQuantity(), transactionDto.getPrice());
+        Transaction transaction = new Transaction(user.getId(), type, transactionDto.getAssetSymbol(), transactionDto.getQuantity(), transactionDto.getPrice());
 
         transactionRepository.save(transaction);
     }
@@ -71,5 +73,32 @@ public class AssetService {
         return userList.get(0);
     }
 
+    public void sellStock(TransactionDto transactionDto) {
+
+        User user = validateUser(transactionDto);
+
+        List<PortfolioItem> portfolioItemList = portfolioItemRepository.findByUserIdAndCompanyName(user.getId(), transactionDto.getAssetSymbol());
+
+        if (portfolioItemList.isEmpty()) {
+            throw new NotEnoughStocksToSell();
+        }
+
+        PortfolioItem portfolioItem;
+        portfolioItem = portfolioItemList.get(0);
+
+        if (portfolioItem.getQuantity() < transactionDto.getQuantity()) {
+            throw new NotEnoughStocksToSell();
+        }
+
+        if (Objects.equals(portfolioItem.getQuantity(), transactionDto.getQuantity())) {
+            portfolioItemRepository.delete(portfolioItem);
+        } else {
+            portfolioItem.setQuantity(portfolioItem.getQuantity() - transactionDto.getQuantity());
+            portfolioItem.setTotalSoldPrice(portfolioItem.getTotalSoldPrice() + transactionDto.getPrice());
+        }
+
+        saveTransaction(transactionDto, user, TransactionType.SELL);
+
+    }
 
 }

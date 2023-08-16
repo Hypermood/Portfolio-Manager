@@ -24,11 +24,15 @@ public class PortfolioItem {
     @Column(name = "total_bought_price")
     private Double totalBoughtPrice;
 
-    public PortfolioItem(Long userId, String companyName, Double quantity, Double totalBoughtPrice) {
+    @Column(name = "total_sold_price")
+    private Double totalSoldPrice;
+
+    public PortfolioItem(Long userId, String companyName, Double quantity, Double totalBoughtPrice, Double totalSoldPrice) {
         this.userId = userId;
         this.companyName = companyName;
         this.quantity = quantity;
         this.totalBoughtPrice = totalBoughtPrice;
+        this.totalSoldPrice = totalSoldPrice;
     }
 
     public PortfolioItem() {
@@ -72,5 +76,13 @@ public class PortfolioItem {
 
     public void setTotalBoughtPrice(Double totalBoughtPrice) {
         this.totalBoughtPrice = totalBoughtPrice;
+    }
+
+    public Double getTotalSoldPrice() {
+        return totalSoldPrice;
+    }
+
+    public void setTotalSoldPrice(Double totalSoldBrice) {
+        this.totalSoldPrice = totalSoldBrice;
     }
 }

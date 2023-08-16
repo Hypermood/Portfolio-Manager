@@ -3,6 +3,7 @@ package com.melon.portfoliomanager.controllers;
 
 import com.melon.portfoliomanager.dtos.TransactionDto;
 import com.melon.portfoliomanager.exceptions.NoSuchUserException;
+import com.melon.portfoliomanager.exceptions.NotEnoughStocksToSell;
 import com.melon.portfoliomanager.services.AssetService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -36,7 +37,24 @@ public class AssetController {
         } catch (NoSuchUserException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            logger.error(String.format("Unexpected error occurred during creating user ! exception=%s", e));
+            logger.error(String.format("Unexpected error occurred during buying stocks ! exception=%s", e));
+            return new ResponseEntity<>("Internal Server Error.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @PostMapping("/sell/asset")
+    public ResponseEntity<String> sellAssets(@Valid @RequestBody TransactionDto transactionDto) {
+
+        try {
+            assetService.sellStock(transactionDto);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (NoSuchUserException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotEnoughStocksToSell e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            logger.error(String.format("Unexpected error occurred during selling stocks ! exception=%s", e));
             return new ResponseEntity<>("Internal Server Error.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
