@@ -20,13 +20,8 @@ public class CompanyStocksManager {
     }
 
     private boolean isPriceChangeAboveThreshold(double latestStockPrice, double lastStockPrice) {
-        if (latestStockPrice > lastStockPrice) {
-            double percentIncrease = ((latestStockPrice - lastStockPrice) / lastStockPrice) * 100;
-            return percentIncrease > PRICE_CHANGE_PERCENT_THRESHOLD;
-        }
-
-        double percentIncrease = ((lastStockPrice - latestStockPrice) / lastStockPrice) * 100;
-        return percentIncrease > PRICE_CHANGE_PERCENT_THRESHOLD;
+        double percentChange = (Math.abs(latestStockPrice - lastStockPrice) / lastStockPrice) * 100;
+        return percentChange > PRICE_CHANGE_PERCENT_THRESHOLD;
     }
 
 

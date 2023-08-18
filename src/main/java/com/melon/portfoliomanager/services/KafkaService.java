@@ -23,10 +23,7 @@ public class KafkaService implements MessageBrokerService {
         this.serializationUtils = serializationUtils;
     }
 
-    public void sendMessage(Map<String, ?> companyStocksWithExtremePriceChanges) throws JsonProcessingException {
-        kafkaTemplate.send(
-                topic.name(),
-                serializationUtils.serializeCompanyStocksToJsonString(companyStocksWithExtremePriceChanges)
-        );
+    public void sendMessage(Map<String, ?> message) throws JsonProcessingException {
+        kafkaTemplate.send(topic.name(), serializationUtils.serializeMapToJsonString(message));
     }
 }

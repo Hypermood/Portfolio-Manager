@@ -10,7 +10,7 @@ import java.util.Map;
 public class SerializationUtils {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public String serializeCompanyStocksToJsonString(Map<String, ?> companyStocks) throws JsonProcessingException {
+    public String serializeMapToJsonString(Map<String, ?> companyStocks) throws JsonProcessingException {
         return objectMapper.writeValueAsString(companyStocks);
     }
 }

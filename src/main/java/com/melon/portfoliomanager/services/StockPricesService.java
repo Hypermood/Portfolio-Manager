@@ -32,7 +32,9 @@ public class StockPricesService {
             StockPricesDTO latestCompanyStocks = (StockPricesDTO) stockPricesResponse.getBody();
             Map<String, Double> companyStocksWithPriceChanges =
                     companyStocksManager.getCompanyStocksWithExtremePriceChanges(latestCompanyStocks.getStockPrices());
-            messageBrokerService.sendMessage(companyStocksWithPriceChanges);
+            if (!companyStocksWithPriceChanges.isEmpty()) {
+                messageBrokerService.sendMessage(companyStocksWithPriceChanges);
+            }
             companyStocksManager.updateCompanyStockPrices(latestCompanyStocks.getStockPrices());
         } catch (Exception e) {
             logger.error(String.format("Error while fetching data from stock prices API ! exception=%s", e));
