@@ -1,5 +1,6 @@
 package com.melon.portfoliomanager.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.melon.portfoliomanager.dtos.responses.StockPricesDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +29,26 @@ public class StockPricesServiceTests {
                     .when(stockPricesHttpService).getStockPrices();
             return stockPricesHttpService;
         }
+
+        @Bean
+        @Qualifier("kafka")
+        @Primary
+        public MessageBrokerService messageBrokerServiceMock() {
+            return mock(MessageBrokerService.class);
+        }
     }
 
     @Autowired
+    @Qualifier("stock-prices-mock-api")
     private StockPricesHttpService stockPricesHttpService;
 
+    @Autowired
+    @Qualifier("kafka")
+    private MessageBrokerService messageBrokerService;
+
     @Test
-    public void testFetchCompanyStocksWillSucceed() {
+    public void testFetchCompanyStocksWillSucceed() throws JsonProcessingException {
         verify(stockPricesHttpService, times(1)).getStockPrices();
+        verify(messageBrokerService, times(0)).sendMessage(any(Map.class));
     }
 }
