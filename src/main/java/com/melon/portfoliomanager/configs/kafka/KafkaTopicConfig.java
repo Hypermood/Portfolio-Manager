@@ -24,7 +24,9 @@ public class KafkaTopicConfig {
     }
 
     @Bean
-    public NewTopic stockPricesChangesTopic() {
-        return new NewTopic("stock-prices-changes", 1, (short) 1);
+    public Map<String, NewTopic> topics() {
+        return new HashMap<>() {{
+            put("stock-prices-changes", new NewTopic("stock-prices-changes", 1, (short) 1));
+        }};
     }
 }
