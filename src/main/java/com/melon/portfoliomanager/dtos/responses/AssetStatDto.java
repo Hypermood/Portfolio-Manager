@@ -2,7 +2,7 @@ package com.melon.portfoliomanager.dtos.responses;
 
 import java.text.DecimalFormat;
 
-public class AssetStat {
+public class AssetStatDto {
 
     private String company;
     private Double gainVal;
@@ -10,15 +10,7 @@ public class AssetStat {
     private Double allocation;
 
 
-    public AssetStat(String company, Double gainVal, Double gainPct, Double allocation) {
-        this.company = company;
-        this.gainVal = Double.valueOf(new DecimalFormat("#.##").format(gainVal));
-        this.gainPct = Double.valueOf(new DecimalFormat("#.##").format(gainPct));
-        this.allocation = Double.valueOf(new DecimalFormat("#.##").format(allocation));
-    }
-
-
-    public AssetStat() {
+    public AssetStatDto() {
     }
 
     public String getCompany() {
@@ -34,6 +26,11 @@ public class AssetStat {
     }
 
     public void setGainVal(Double gainVal) {
+
+        if (gainVal == null) {
+            throw new RuntimeException("GainVal cannot be null");
+        }
+
         this.gainVal = Double.valueOf(new DecimalFormat("#.##").format(gainVal));
     }
 
@@ -42,6 +39,11 @@ public class AssetStat {
     }
 
     public void setGainPct(Double gainPct) {
+
+        if (gainPct == null) {
+            throw new RuntimeException("GainPct cannot be null");
+        }
+
         this.gainPct = Double.valueOf(new DecimalFormat("#.##").format(gainPct));
     }
 
@@ -50,6 +52,11 @@ public class AssetStat {
     }
 
     public void setAllocation(Double allocation) {
+
+        if (allocation == null) {
+            throw new RuntimeException("Allocation cannot be null");
+        }
+
         this.allocation = Double.valueOf(new DecimalFormat("#.##").format(allocation));
     }
 }

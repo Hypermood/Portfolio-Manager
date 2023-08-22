@@ -1,7 +1,7 @@
 package com.melon.portfoliomanager.services;
 
-import com.melon.portfoliomanager.dtos.responses.AnalyticsResponse;
-import com.melon.portfoliomanager.dtos.responses.AssetStat;
+import com.melon.portfoliomanager.dtos.responses.AnalyticsResponseDto;
+import com.melon.portfoliomanager.dtos.responses.AssetStatDto;
 import com.melon.portfoliomanager.exceptions.NoSuchUserException;
 import com.melon.portfoliomanager.models.PortfolioItem;
 import com.melon.portfoliomanager.models.User;
@@ -20,40 +20,37 @@ public class AnalyticsService {
 
     private final PortfolioItemRepository portfolioItemRepository;
     private final UserRepository userRepository;
-    private final StockPricesMockApiHttpService stockPricesMockApiHttpService;
     private final CompanyStocksManager companyStocksManager;
 
     @Autowired
     public AnalyticsService(PortfolioItemRepository portfolioItemRepository,
                             UserRepository userRepository,
-                            StockPricesMockApiHttpService stockPricesMockApiHttpService,
                             CompanyStocksManager companyStocksManager) {
         this.portfolioItemRepository = portfolioItemRepository;
         this.userRepository = userRepository;
-        this.stockPricesMockApiHttpService = stockPricesMockApiHttpService;
         this.companyStocksManager = companyStocksManager;
     }
 
-    public AnalyticsResponse fetchAnalyticsForUser(String username) {
+    public AnalyticsResponseDto fetchAnalyticsForUser(String username) {
         User user = validateUserExists(username);
         List<PortfolioItem> portfolioItems = portfolioItemRepository.findByUserId(user.getId());
 
-        List<AssetStat> assetStats = new ArrayList<>();
+        List<AssetStatDto> assetStats = new ArrayList<>();
         double totalPortfolioGainVal = 0.0;
         double totalSpent = 0.0;
+        double totalPortfolioGainPct = 0.0;
         double currentStocksTotalValue = calculateCurrentStocksTotalValue(portfolioItems);
 
         for (PortfolioItem item : portfolioItems) {
-            AssetStat assetStat = calculateAssetStat(item, currentStocksTotalValue);
+            AssetStatDto assetStat = calculateAssetStat(item, currentStocksTotalValue);
             assetStats.add(assetStat);
 
             totalPortfolioGainVal += assetStat.getGainVal();
             totalSpent += item.getTotalBoughtPrice();
         }
 
-        double totalPortfolioGainPct = (totalPortfolioGainVal / totalSpent) * 100;
-        if (totalSpent == 0.0) {
-            totalPortfolioGainPct = 0.0;
+        if (totalSpent != 0.0) {
+            totalPortfolioGainPct = (totalPortfolioGainVal / totalSpent) * 100;
         }
 
         return buildAnalyticsResponse(username, assetStats, totalPortfolioGainVal, totalPortfolioGainPct, currentStocksTotalValue);
@@ -66,14 +63,20 @@ public class AnalyticsService {
                 .orElseThrow(() -> new NoSuchUserException("There is no such user."));
     }
 
-    private AssetStat calculateAssetStat(PortfolioItem item, Double currentStocksTotalValue) {
+    private AssetStatDto calculateAssetStat(PortfolioItem item, Double currentStocksTotalValue) {
         double currentPrice = getCurrentPriceForCompany(item.getCompanyName());
-        double currentValue = item.getQuantity() * currentPrice;
-        double gainVal = (currentValue + item.getTotalSoldPrice()) - item.getTotalBoughtPrice();
-        double gainPct = (((currentValue + item.getTotalSoldPrice()) / item.getTotalBoughtPrice()) - 1) * 100;
-        double allocation = currentValue / currentStocksTotalValue;
+        double currentCompanyStocksActualPrice = item.getQuantity() * currentPrice;
+        double gainVal = (currentCompanyStocksActualPrice + item.getTotalSoldPrice()) - item.getTotalBoughtPrice();
+        double gainPct = (((currentCompanyStocksActualPrice + item.getTotalSoldPrice()) / item.getTotalBoughtPrice()) - 1) * 100;
+        double allocation = currentCompanyStocksActualPrice / currentStocksTotalValue;
 
-        return new AssetStat(item.getCompanyName(), gainVal, gainPct, allocation);
+        AssetStatDto assetStatDto = new AssetStatDto();
+        assetStatDto.setCompany(item.getCompanyName());
+        assetStatDto.setGainVal(gainVal);
+        assetStatDto.setGainPct(gainPct);
+        assetStatDto.setAllocation(allocation);
+
+        return assetStatDto;
     }
 
     private double getCurrentPriceForCompany(String companyName) {
@@ -87,13 +90,13 @@ public class AnalyticsService {
                 .sum();
     }
 
-    private AnalyticsResponse buildAnalyticsResponse(String username, List<AssetStat> assetStats, double totalPortfolioGainVal, double totalPortfolioGainPct, double currentStocksTotalValue) {
-        AnalyticsResponse analyticsResponse = new AnalyticsResponse();
-        analyticsResponse.setUsername(username);
-        analyticsResponse.setAssets(assetStats);
-        analyticsResponse.setTotalPortfolioGainVal(totalPortfolioGainVal);
-        analyticsResponse.setTotalPortfolioGainPct(totalPortfolioGainPct);
-        analyticsResponse.setTotalPortfolioValue(currentStocksTotalValue);
-        return analyticsResponse;
+    private AnalyticsResponseDto buildAnalyticsResponse(String username, List<AssetStatDto> assetStats, double totalPortfolioGainVal, double totalPortfolioGainPct, double currentStocksTotalValue) {
+        AnalyticsResponseDto analyticsResponseDto = new AnalyticsResponseDto();
+        analyticsResponseDto.setUsername(username);
+        analyticsResponseDto.setAssets(assetStats);
+        analyticsResponseDto.setTotalPortfolioGainVal(totalPortfolioGainVal);
+        analyticsResponseDto.setTotalPortfolioGainPct(totalPortfolioGainPct);
+        analyticsResponseDto.setTotalPortfolioValue(currentStocksTotalValue);
+        return analyticsResponseDto;
     }
 }

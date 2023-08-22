@@ -1,8 +1,8 @@
 package com.melon.portfoliomanager.controllers;
 
+import com.melon.portfoliomanager.dtos.responses.AnalyticsResponseDto;
 import com.melon.portfoliomanager.exceptions.AnalyticsException;
 import com.melon.portfoliomanager.exceptions.NoSuchUserException;
-import com.melon.portfoliomanager.dtos.responses.AnalyticsResponse;
 import com.melon.portfoliomanager.services.AnalyticsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,15 +27,10 @@ public class AnalyticsController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAnalytics(@RequestParam(value = "username", required = false) String username) {
-
-        if (username == null || username.trim().isEmpty()) {
-            return new ResponseEntity<>("Missing or empty username parameter.", HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> getAnalytics(@RequestParam(value = "username") String username) {
 
         try {
-            AnalyticsResponse response = analyticsService.fetchAnalyticsForUser(username);
-
+            AnalyticsResponseDto response = analyticsService.fetchAnalyticsForUser(username);
             return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (NoSuchUserException | AnalyticsException ex) {

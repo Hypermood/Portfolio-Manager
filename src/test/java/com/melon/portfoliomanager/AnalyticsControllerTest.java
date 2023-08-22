@@ -1,7 +1,7 @@
 package com.melon.portfoliomanager;
 
+import com.melon.portfoliomanager.dtos.responses.AnalyticsResponseDto;
 import com.melon.portfoliomanager.exceptions.NoSuchUserException;
-import com.melon.portfoliomanager.dtos.responses.AnalyticsResponse;
 import com.melon.portfoliomanager.services.AnalyticsService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,11 +26,10 @@ public class AnalyticsControllerTest {
     private AnalyticsService analyticsService;
 
     @Test
-    public void testAnalyticsForUser_ValidUser_OKRequest() throws Exception {
-        AnalyticsResponse dummyAnalytics = new AnalyticsResponse();
+    public void testAnalyticsForUser_ValidUser_OKRequest() {
+        AnalyticsResponseDto dummyAnalytics = new AnalyticsResponseDto();
         dummyAnalytics.setUsername("testUser");
         dummyAnalytics.setTotalPortfolioValue(1000.0);
-
 
         when(analyticsService.fetchAnalyticsForUser("testUser")).thenReturn(dummyAnalytics);
 
@@ -47,11 +46,14 @@ public class AnalyticsControllerTest {
     }
 
     @Test
-    public void testAnalyticsForUser_NoSuchUser_BadRequest() throws Exception {
+    public void testAnalyticsForUser_NoSuchUser_BadRequest() {
         when(analyticsService.fetchAnalyticsForUser("invalidUser"))
                 .thenThrow(new NoSuchUserException("User not found"));
 
-        webTestClient.get().uri("/analytics?username=invalidUser")
+        webTestClient.get().uri(uriBuilder -> uriBuilder
+                        .path("/analytics")
+                        .queryParam("username", "invalidUser")
+                        .build())
                 .exchange()
                 .expectStatus().isBadRequest();
     }
@@ -64,11 +66,14 @@ public class AnalyticsControllerTest {
     }
 
     @Test
-    public void testAnalyticsForUser_UnexpectedError_InternalServerError(CapturedOutput capturedOutput) throws Exception {
+    public void testAnalyticsForUser_UnexpectedError_InternalServerError(CapturedOutput capturedOutput) {
         when(analyticsService.fetchAnalyticsForUser("testUser"))
                 .thenThrow(new RuntimeException("Unexpected error"));
 
-        webTestClient.get().uri("/analytics?username=testUser")
+        webTestClient.get().uri(uriBuilder -> uriBuilder
+                        .path("/analytics")
+                        .queryParam("username", "testUser")
+                        .build())
                 .exchange()
                 .expectStatus().is5xxServerError();
 
