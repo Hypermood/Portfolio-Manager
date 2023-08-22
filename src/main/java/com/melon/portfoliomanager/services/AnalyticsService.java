@@ -2,7 +2,6 @@ package com.melon.portfoliomanager.services;
 
 import com.melon.portfoliomanager.dtos.responses.AnalyticsResponse;
 import com.melon.portfoliomanager.dtos.responses.AssetStat;
-import com.melon.portfoliomanager.dtos.responses.StockPricesDTO;
 import com.melon.portfoliomanager.exceptions.NoSuchUserException;
 import com.melon.portfoliomanager.models.PortfolioItem;
 import com.melon.portfoliomanager.models.User;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 
 @Service
@@ -22,13 +21,17 @@ public class AnalyticsService {
     private final PortfolioItemRepository portfolioItemRepository;
     private final UserRepository userRepository;
     private final StockPricesMockApiHttpService stockPricesMockApiHttpService;
+    private final CompanyStocksManager companyStocksManager;
 
     @Autowired
     public AnalyticsService(PortfolioItemRepository portfolioItemRepository,
-                            UserRepository userRepository, StockPricesMockApiHttpService stockPricesMockApiHttpService) {
+                            UserRepository userRepository,
+                            StockPricesMockApiHttpService stockPricesMockApiHttpService,
+                            CompanyStocksManager companyStocksManager) {
         this.portfolioItemRepository = portfolioItemRepository;
         this.userRepository = userRepository;
         this.stockPricesMockApiHttpService = stockPricesMockApiHttpService;
+        this.companyStocksManager = companyStocksManager;
     }
 
     public AnalyticsResponse fetchAnalyticsForUser(String username) {
@@ -74,8 +77,8 @@ public class AnalyticsService {
     }
 
     private double getCurrentPriceForCompany(String companyName) {
-        StockPricesDTO body = stockPricesMockApiHttpService.getStockPrices().getBody();
-        return Optional.ofNullable(body.getStockPrices().get(companyName)).orElse(0.0);
+        Double currentPriceForCompany = companyStocksManager.getCompanyStocks().get(companyName);
+        return Objects.requireNonNullElse(currentPriceForCompany, 0.0);
     }
 
     private double calculateCurrentStocksTotalValue(List<PortfolioItem> items) {
