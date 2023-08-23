@@ -35,14 +35,6 @@ public class PortfolioItem {
         this.totalSoldPrice = totalSoldPrice;
     }
 
-    public PortfolioItem(String companyName, Double quantity, Double totalBoughtPrice, Double totalSoldPrice) {
-        this.companyName = companyName;
-        this.quantity = quantity;
-        this.totalBoughtPrice = totalBoughtPrice;
-        this.totalSoldPrice = totalSoldPrice;
-    }
-
-
     public PortfolioItem() {
     }
 

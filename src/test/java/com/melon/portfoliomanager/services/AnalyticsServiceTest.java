@@ -92,11 +92,11 @@ public class AnalyticsServiceTest {
         User user = new User();
         user.setId(1L);
 
-        PortfolioItem efItem = new PortfolioItem("Efbet", 5.0, 400.0, 100.0);
+        PortfolioItem efItem = new PortfolioItem(1L, "Efbet", 5.0, 400.0, 100.0);
 
-        PortfolioItem winItem = new PortfolioItem("Winbet", 10.0, 1000.0, 234.0);
+        PortfolioItem winItem = new PortfolioItem(1L, "Winbet", 10.0, 1000.0, 234.0);
 
-        PortfolioItem inItem = new PortfolioItem("Inbet", 2.0, 2000.0, 0.0);
+        PortfolioItem inItem = new PortfolioItem(1L, "Inbet", 2.0, 2000.0, 0.0);
 
         Map<String, Double> stockPrices = new HashMap<>();
         stockPrices.put("Efbet", 100.0);

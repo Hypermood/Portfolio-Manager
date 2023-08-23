@@ -49,7 +49,7 @@ public class AnalyticsService {
             totalSpent += item.getTotalBoughtPrice();
         }
 
-        if (totalSpent != 0.0) {
+        if (Double.compare(totalSpent, 0.0) != 0) {
             totalPortfolioGainPct = (totalPortfolioGainVal / totalSpent) * 100;
         }
 
