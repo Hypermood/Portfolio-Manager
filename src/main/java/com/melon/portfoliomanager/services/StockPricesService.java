@@ -14,7 +14,7 @@ import java.util.Map;
 @Service
 public class StockPricesService {
     private static final Logger logger = LoggerFactory.getLogger(StockPricesService.class);
-    private final CompanyStocksManager companyStocksManager;
+    private final CompanyStocksManager companyStocksManager = new CompanyStocksManager();
     private final StockPricesHttpService stockPricesHttpService;
     private final MessageBrokerService messageBrokerService;
 
