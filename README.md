@@ -12,24 +12,10 @@ Before you begin, ensure you have met the following requirements:
 
 
 ## How to Run the Project
-1. **Make sure that the Stock Prices Mock Microservice is running**
 
-2. **Clone the Repository**:
+1. **Run the Application**:
    ```bash
-   git clone https://github.com/Hypermood/Portfolio-Manager.git
-   cd portfolio-manager
-
-3. **Build with Maven**
-    ```bash
-    mvn clean install
-4. **Run the Application**
-    ```bash
-    mvn spring-boot:run
-
-5. **Alternatively, with Docker**
-    ```bash
-    docker build -t portfolio-manager .
-    docker run -p 8080:8080 portfolio-manager
+   docker compose up -d
 
 ## How to Use the Project
 
