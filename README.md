@@ -19,59 +19,9 @@ Before you begin, ensure you have met the following requirements:
 
 ## How to Use the Project
 
-The application exposes a RESTful API for managing portfolios.
-
-### User Endpoints
-
-1. **Create User**
-    - HTTP Method: POST
-    - URL: /users/add
-    - BODY:
-   ```json
-    {
-       userName: string,
-       email: string,
-       firstName: string, (Optional)
-       lastName: string (Optional)
-    }
-2. **Delete User**
-    - HTTP Method: DELETE
-    - URL: /users/delete
-    - BODY:
-   ```json
-    {
-       userName: string,
-    }
-### Assets' Endpoints
-
-1. **Buy Assets**
-    - HTTP Method: POST
-    - URL: /buy/asset
-    - BODY:
-   ```json
-   {
-       userName: string,
-       assetSymbol: string,
-       quantity: double,
-       price: double
-   }
-
-2. **Sell Asset**
-    - HTTP Method: POST
-    - URL: /sell/asset
-    - BODY:
-   ```json
-   {
-       userName: string,
-       assetSymbol: string,
-       quantity: unsigned int,
-       boughtPrice: unsigned int
-   }
-### Analytics Endpoint
-
-1. **Get Analytics**
-    - HTTP Method: GET
-    - URL: /analytics?userName=${userName}
+The application exposes a RESTful API for managing portfolios.<br>
+You can use your favourite tool for sending HTTP queries to access the API. <br> 
+You can also take a look at the API here: http://localhost:8080/swagger-ui/index.html
     
 ## Example HTTP requests to the API that our project provides
 
