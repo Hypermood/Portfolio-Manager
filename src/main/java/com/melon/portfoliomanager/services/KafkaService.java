@@ -1,7 +1,5 @@
 package com.melon.portfoliomanager.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.melon.portfoliomanager.utils.SerializationUtils;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,24 +14,25 @@ public class KafkaService implements MessageBrokerService {
     private static final Logger logger = LoggerFactory.getLogger(KafkaService.class);
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final Map<String, NewTopic> topics;
-    private final SerializationUtils serializationUtils;
 
     @Autowired
-    public KafkaService(KafkaTemplate<String, String> kafkaTemplate, Map<String, NewTopic> topics,
-                        SerializationUtils serializationUtils) {
+    public KafkaService(KafkaTemplate<String, String> kafkaTemplate, Map<String, NewTopic> topics) {
         this.kafkaTemplate = kafkaTemplate;
         this.topics = topics;
-        this.serializationUtils = serializationUtils;
     }
 
-    public void sendMessage(Map<String, ?> message) throws JsonProcessingException {
+    public void sendMessage(String message) {
         String topicName = "stock-prices-changes";
+        validateTopicName(topicName);
+        kafkaTemplate.send(topicName, message);
+    }
+
+    private void validateTopicName(String topicName) {
         if (!topics.containsKey(topicName)) {
             logger.error(String.format("Error while getting topic from application context while trying to send " +
                     "message to Kafka ! No topic with name topic_name=%s exists in application context !", topicName));
-            throw new RuntimeException("Error during sending message to Kafka ! No such topic exists in application " +
-                    "context !");
+            throw new RuntimeException(String.format("Error during sending message to Kafka ! No topic with name " +
+                    "topic_name='%s' exists in application context !", topicName));
         }
-        kafkaTemplate.send(topicName, serializationUtils.serializeMapToJsonString(message));
     }
 }
