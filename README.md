@@ -5,6 +5,7 @@ The Portfolio Manager Application is a comprehensive tool designed to help inves
 Before you begin, ensure you have met the following requirements:
 
 - **Docker**: Installation guide is available [here](https://docs.docker.com/get-docker/).
+- **Stock Prices Mock API**: A running instance of this microservice on localhost is needed.
 
 ## How to Run the Project
 
