@@ -4,12 +4,7 @@ The Portfolio Manager Application is a comprehensive tool designed to help inves
 ## Prerequisites
 Before you begin, ensure you have met the following requirements:
 
-- **Java 11+**: This application is built using Java. Ensure JDK 11 or later is installed. Download from [Oracle's official site](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html).
-
-- **Maven**: This is the chosen build tool. If not installed, follow the [official guide](https://maven.apache.org/install.html).
-
-- **Docker** (Optional): For those opting for a containerized environment. Installation guide is available [here](https://docs.docker.com/get-docker/).
-
+- **Docker**: Installation guide is available [here](https://docs.docker.com/get-docker/).
 
 ## How to Run the Project
 
