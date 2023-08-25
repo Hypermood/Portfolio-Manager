@@ -23,8 +23,8 @@ public class TransactionDto {
     private Double price;
 
 
-    public TransactionDto(String userName, String assetSymbol, Double quantity, Double price) {
-        this.username = userName;
+    public TransactionDto(String username, String assetSymbol, Double quantity, Double price) {
+        this.username = username;
         this.assetSymbol = assetSymbol;
         this.quantity = quantity;
         this.price = price;
@@ -37,8 +37,8 @@ public class TransactionDto {
         return username;
     }
 
-    public void setUserName(String userName) {
-        this.username = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getAssetSymbol() {

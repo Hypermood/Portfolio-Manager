@@ -14,15 +14,17 @@ import java.util.Map;
 @Service
 public class StockPricesService {
     private static final Logger logger = LoggerFactory.getLogger(StockPricesService.class);
-    private final CompanyStocksManager companyStocksManager = new CompanyStocksManager();
+    private final CompanyStocksManager companyStocksManager;
     private final StockPricesHttpService stockPricesHttpService;
     private final MessageBrokerService messageBrokerService;
 
     @Autowired
     public StockPricesService(@Qualifier("stock-prices-mock-api") StockPricesHttpService stockPricesHttpService,
-                              @Qualifier("kafka") MessageBrokerService messageBrokerService) {
+                              @Qualifier("kafka") MessageBrokerService messageBrokerService,
+                              CompanyStocksManager companyStocksManager) {
         this.stockPricesHttpService = stockPricesHttpService;
         this.messageBrokerService = messageBrokerService;
+        this.companyStocksManager = companyStocksManager;
     }
 
     @Scheduled(fixedDelay = 15 * 60 * 1000)
