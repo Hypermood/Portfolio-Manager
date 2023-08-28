@@ -49,6 +49,6 @@ public class StockPricesServiceTests {
     @Test
     public void testFetchCompanyStocksWillSucceed() throws JsonProcessingException {
         verify(stockPricesHttpService, times(1)).getStockPrices();
-        verify(messageBrokerService, times(0)).sendMessage(any(Map.class));
+        verify(messageBrokerService, times(0)).sendMessage(any(String.class));
     }
 }

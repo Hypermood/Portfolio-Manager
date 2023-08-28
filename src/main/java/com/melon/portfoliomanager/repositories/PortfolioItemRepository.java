@@ -8,9 +8,9 @@ import java.util.List;
 
 @Repository
 public interface PortfolioItemRepository extends JpaRepository<PortfolioItem, Long> {
-
     List<PortfolioItem> findByUserIdAndCompanyName(Long userId, String companyName);
 
     List<PortfolioItem> findByUserId(Long userId);
 
+    List<PortfolioItem> findByCompanyNameIn(List<String> companyNames);
 }
